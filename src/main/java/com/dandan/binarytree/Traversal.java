@@ -1,6 +1,6 @@
 package com.dandan.binarytree;
 
-import java.util.Stack;
+import java.util.*;
 
 /**
  * @Author: tangdandan
@@ -23,8 +23,33 @@ public class Traversal {
     public static void preorderTraversalRoot(TreeNode root){
 
     }
-    //后序遍历(递归）
     //后序遍历（不递归）
+    //中序遍历（不递归）
+    //层序遍历
+    //求二叉树的最大宽度
+    public static int widthOfBinaryTree(TreeNode root) {
+
+        //定义一个queue记录每一层宽度结果
+        Queue<RecordTree> level = new LinkedList<>();
+        level.offer(new RecordTree(root,0,0));
+        int ans  = 0 ;
+        int curlevel = 0;
+        RecordTree left = new RecordTree();
+        while(!level.isEmpty()){
+                RecordTree cur = level.poll();
+                if(cur.tree!=null){
+                    level.offer(new RecordTree(cur.tree.left,cur.level+1,cur.position*2));
+                    level.offer(new RecordTree(cur.tree.right,cur.level+1,cur.position*2+1));
+                    if(curlevel!=cur.level){
+                        curlevel = cur.level;
+                        left = cur;
+                    }
+                    ans = Math.max(ans, cur.position - left.position + 1);
+            }
+        }
+        return ans;
+    }
+
     public static void main(String[] args) {
         //构建二叉树
         TreeNode root = new TreeNode();
@@ -42,7 +67,9 @@ public class Traversal {
         right.right=rightRight;
         right.left = rightLeft;
         //先序遍历
-        preorderTraversal(root);
-        preorderTraversalRoot(root);
+       // preorderTraversal(root);
+        //preorderTraversalRoot(root);
+        int width = widthOfBinaryTree(root);
+        System.out.println(width);
     }
 }
